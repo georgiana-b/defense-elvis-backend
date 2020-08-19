@@ -5,7 +5,8 @@ const config = require('../../config/default');
 const networkActorSerializer = require('./network_actor');
 
 function formatCluster(networkCluster) {
-  const cluster = _.pick(networkCluster, ['label', 'id', 'type', 'medianCompetition', 'value']);
+  const cluster = _.pick(networkCluster, ['label', 'id', 'type', 'medianCompetition', 'value',
+    'numberOfWinningBids', 'amountOfMoneyExchanged']);
   cluster.flags = {};
   cluster.hidden = !networkCluster.active;
   return config.db.select("expand(out('Includes'))")

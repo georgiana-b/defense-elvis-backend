@@ -15,7 +15,7 @@ function formatEdge(networkEdge) {
 }
 
 function formatContractsEdgeWithDetails(network, networkEdge) {
-  const edge = _.pick(networkEdge, ['from', 'to', 'type']);
+  const edge = _.pick(networkEdge, ['from', 'to', 'type', 'numberOfWinningBids', 'amountOfMoneyExchanged']);
   edge.id = networkEdge.uuid;
   const actorIDsQuery = `SELECT out.in('ActingAs').id as edgeBuyerIDs,
     in.in('ActingAs').id as edgeBidderIDs

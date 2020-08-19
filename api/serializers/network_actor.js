@@ -18,7 +18,8 @@ function formatNetworkActor(networkActor) {
 }
 
 function formatActorWithDetails(network, networkActor, nodeIDs) {
-  const node = _.pick(networkActor, ['label', 'id', 'type', 'medianCompetition', 'value', 'countries']);
+  const node = _.pick(networkActor, ['label', 'id', 'type', 'medianCompetition', 'value', 'countries', 
+    'numberOfWinningBids', 'amountOfMoneyExchanged']);
   node.flags = {};
   node.hidden = !networkActor.active;
   const edgeToBidClass = networkActor.type === 'buyer' ? 'Awards' : 'Participates';
