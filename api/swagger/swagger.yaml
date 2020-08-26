@@ -904,7 +904,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /networks/{networkID}/cluster/{clusterID}/bids:
+  /networks/{networkID}/clusters/{clusterID}/bids:
     x-swagger-router-controller: actor_clusters
     get:
       tags:
