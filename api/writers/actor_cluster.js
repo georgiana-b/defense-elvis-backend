@@ -355,12 +355,12 @@ function createContractsEdges(transaction, edgeToBidClass, network, actorIDs, cl
   });
 }
 
-function createContractsEdge(transaction, network, attrs, contractorNode, clusterName) {
+function createContractsEdge(transaction, network, edgeValues, contractorNode, clusterName) {
   const edgeAttrs = {
     uuid: uuidv4(),
-    value: attrs.value,
-    numberOfWinningBids: attrs.numberOfWinningBids,
-    amountOfMoneyExchanged: attrs.amountOfMoneyExchanged,
+    value: edgeValues.value,
+    numberOfWinningBids: edgeValues.numberOfWinningBids,
+    amountOfMoneyExchanged: edgeValues.amountOfMoneyExchanged,
     active: true,
   };
   const partnerName = networkWriters.recordName(contractorNode.id, contractorNode['@class']);
