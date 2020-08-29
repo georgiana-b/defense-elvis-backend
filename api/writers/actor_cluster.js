@@ -297,8 +297,12 @@ function createContractsEdges(transaction, edgeToBidClass, network, actorIDs, cl
     return Promise.map(contractsEdges, (edge) =>
       retrieveNetworkActor(edge.contractorID, network.id)
         .then((contractorNode) => {
-          const edgeValue = edge[network.settings.edgeSize];
-          return createContractsEdge(transaction, network, edgeValue, contractorNode, clusterName);
+          const edgeAttrs = {
+            value: edge[network.settings.edgeSize],
+            numberOfWinningBids: edge.numberOfWinningBids,
+            amountOfMoneyExchanged: edge.amountOfMoneyExchanged,
+          }
+          return createContractsEdge(transaction, network, edgeAttrs, contractorNode, clusterName);
         }))
       .then(() => {
         // Calculate Contracts edges with other clusters in the network
@@ -339,18 +343,24 @@ function createContractsEdges(transaction, edgeToBidClass, network, actorIDs, cl
               { params: queryParams },
             ),
             (contractorCluster, edgeResult) => {
-              const edgeValue = edgeResult[0][network.settings.edgeSize];
-              return createContractsEdge(transaction, network, edgeValue, contractorCluster, clusterName); // eslint-disable-line max-len
+              const edgeAttrs = {
+                value: edgeResult[0][network.settings.edgeSize],
+                numberOfWinningBids: edgeResult[0].numberOfWinningBids,
+                amountOfMoneyExchanged: edgeResult[0].amountOfMoneyExchanged,
+              }
+              return createContractsEdge(transaction, network, edgeAttrs, contractorCluster, clusterName); // eslint-disable-line max-len
             },
           );
         }));
   });
 }
 
-function createContractsEdge(transaction, network, edgeValue, contractorNode, clusterName) {
+function createContractsEdge(transaction, network, attrs, contractorNode, clusterName) {
   const edgeAttrs = {
     uuid: uuidv4(),
-    value: edgeValue,
+    value: attrs.value,
+    numberOfWinningBids: attrs.numberOfWinningBids,
+    amountOfMoneyExchanged: attrs.amountOfMoneyExchanged,
     active: true,
   };
   const partnerName = networkWriters.recordName(contractorNode.id, contractorNode['@class']);
