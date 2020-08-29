@@ -4,6 +4,7 @@ const _ = require('lodash');
 const uuidv4 = require('uuid/v4');
 const helpers = require('./helpers');
 const priceExtractor = require('./price');
+const { help } = require('commander');
 
 function extractTender(tenderAttrs) {
   const valueAttrs = _.pick(tenderAttrs, ['currency', 'value_clean', 'value_eur', 'value_approx'])
@@ -16,6 +17,7 @@ function extractTender(tenderAttrs) {
     year: helpers.parseNumber(tenderAttrs.year_clean),
     xYearApproximated: (tenderAttrs.year_approx === "1"),
     sources: tenderAttrs.source.split('\n'),
+    deduplicated: helpers.parseNumber(tenderAttrs.duplication),
   };
 }
 
