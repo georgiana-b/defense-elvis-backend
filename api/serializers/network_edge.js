@@ -15,10 +15,13 @@ function formatEdge(networkEdge) {
 }
 
 function formatContractsEdgeWithDetails(network, networkEdge) {
-  const edge = _.pick(networkEdge, ['from', 'to', 'type', 'numberOfWinningBids', 'amountOfMoneyExchanged']);
+  const edge = _.pick(networkEdge, ['from', 'to', 'type', 'value', 'numberOfWinningBids', 'amountOfMoneyExchanged']);
   edge.id = networkEdge.uuid;
+  // TODO: The problem is that for clusters there is no in('ActingAs') because they don't have a direct connection to the actors
   const actorIDsQuery = `SELECT out.in('ActingAs').id as edgeBuyerIDs,
-    in.in('ActingAs').id as edgeBidderIDs
+    out.out('Includes').in('ActingAs').id as edgeClusterBuyerIDs,
+    in.in('ActingAs').id as edgeBidderIDs,
+    in.out('Includes').in('ActingAs').id as edgeClusterBidderIDs
     FROM NetworkEdge
     WHERE uuid=:edgeUUID;`;
   return config.db.query(
@@ -26,6 +29,8 @@ function formatContractsEdgeWithDetails(network, networkEdge) {
     { params: { edgeUUID: networkEdge.uuid } },
   )
     .then((result) => {
+      const buyerIDs = _.isEmpty(result[0].edgeClusterBuyerIDs) ? result[0].edgeBuyerIDs : result[0].edgeClusterBuyerIDs;
+      const bidderIDs = _.isEmpty(result[0].edgeClusterBidderIDs) ? result[0].edgeBidderIDs : result[0].edgeClusterBidderIDs;
       const detailsQuery = `SELECT list(price.netAmountEur) as priceList
           FROM Bid
           WHERE ${_.join(networkWriters.queryToBidFilters(network.query), ' AND ')}
@@ -34,8 +39,8 @@ function formatContractsEdgeWithDetails(network, networkEdge) {
           AND isWinning=true;`;
       const params = Object.assign(
         {
-          edgeBuyerIDs: result[0].edgeBuyerIDs,
-          edgeBidderIDs: result[0].edgeBidderIDs,
+          edgeBuyerIDs: buyerIDs,
+          edgeBidderIDs: bidderIDs,
         },
         network.query,
       );
