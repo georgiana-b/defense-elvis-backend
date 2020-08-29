@@ -23,6 +23,11 @@ async function writeTender(fullTenderRecord) {
   const tender = tenderExtractor.extractTender(fullTenderRecord);
   const tenderName = recordName(tender.id, 'Tender');
 
+  // 0 means it's not a duplicated, 1 means we're not sure, 2 means it's a duplicate
+  if (tender.deduplicated > 1) {
+    return new Promise((resolve) => resolve(null));
+  }
+
   const transaction = config.db.let(tenderName, (t) => {
       t.create('vertex', 'Tender')
         .set(tender);
