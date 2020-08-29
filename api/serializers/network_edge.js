@@ -57,7 +57,9 @@ function formatContractsEdgeWithDetails(network, networkEdge) {
 function formatContractsEdgeBids(network, networkEdge, limit, page) {
   const skip = (page - 1) * limit;
   const actorIDsQuery = `SELECT out.in('ActingAs').id as edgeBuyerIDs,
-    in.in('ActingAs').id as edgeBidderIDs
+    out.out('Includes').in('ActingAs').id as edgeClusterBuyerIDs,
+    in.in('ActingAs').id as edgeBidderIDs,
+    in.out('Includes').in('ActingAs').id as edgeClusterBidderIDs
     FROM NetworkEdge
     WHERE uuid=:edgeUUID;`;
   return config.db.query(
@@ -65,6 +67,8 @@ function formatContractsEdgeBids(network, networkEdge, limit, page) {
     { params: { edgeUUID: networkEdge.uuid } },
   )
     .then((result) => {
+      const buyerIDs = _.isEmpty(result[0].edgeClusterBuyerIDs) ? result[0].edgeBuyerIDs : result[0].edgeClusterBuyerIDs;
+      const bidderIDs = _.isEmpty(result[0].edgeClusterBidderIDs) ? result[0].edgeBidderIDs : result[0].edgeClusterBidderIDs;
       const edgeBidsQuery = `SELECT *
         FROM Bid
         WHERE ${_.join(networkWriters.queryToBidFilters(network.query), ' AND ')}
@@ -75,8 +79,8 @@ function formatContractsEdgeBids(network, networkEdge, limit, page) {
         SKIP :skip;`;
       const params = Object.assign(
         {
-          edgeBuyerIDs: result[0].edgeBuyerIDs,
-          edgeBidderIDs: result[0].edgeBidderIDs,
+          edgeBuyerIDs: buyerIDs,
+          edgeBidderIDs: bidderIDs,
           limit,
           skip,
         },
