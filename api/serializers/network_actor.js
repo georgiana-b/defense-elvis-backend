@@ -63,6 +63,7 @@ function formatActorBids(network, networkActor, limit = 10, page = 1, nodeIDs) {
         WHERE ${_.join(networkWriters.queryToBidFilters(network.query), ' AND ')}
         AND in('${edgeToBidClass}').id in :actorIDs
         AND isWinning=true
+        ORDER BY price.netAmountEur DESC
         LIMIT :limit
         SKIP :skip;`;
       const params = Object.assign({}, network.query, {
