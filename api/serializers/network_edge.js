@@ -74,8 +74,8 @@ function formatContractsEdgeBids(network, networkEdge, limit, page) {
         WHERE ${_.join(networkWriters.queryToBidFilters(network.query), ' AND ')}
         AND in('Awards').id in :edgeBuyerIDs
         AND in('Participates').id in :edgeBidderIDs
-        ORDER BY price.netAmountEur DESC
         AND isWinning=true
+        ORDER BY price.netAmountEur DESC
         LIMIT :limit
         SKIP :skip;`;
       const params = Object.assign(
