@@ -22,6 +22,11 @@ function recordName(id, className) {
 async function writeTender(fullTenderRecord, skipMilitaryFilters = false) {
   const awardedLots = _.filter(fullTenderRecord.lots, { status: 'AWARDED' });
 
+  // If the tender is not in opentender, skip it
+  if (_.get(fullTenderRecord, 'metaData.opentender', true) === false ) {
+    return new Promise((resolve) => resolve(null));
+  }
+
   // If there are no awarded lots don't even process the tender
   if (awardedLots.length === 0) {
     return new Promise((resolve) => resolve(null));
