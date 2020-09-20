@@ -19,7 +19,7 @@ program
   .option('-c --concurrent_lines [no.lines]', 'Number of concurrent lines processed at once per file')
   .option('-r -retries [no.retries]', 'Number of retries for a failed line')
   .action((dumpFilePath, moreDumpFilePaths, options) => {
-    const concurrency = _.toSafeInteger(options.concurrent_lines) || 1000;
+    const concurrency = _.toSafeInteger(options.concurrent_lines) || 1;
     const retries = _.toSafeInteger(options.retries) || 1;
     const dumpFilePaths = _.concat([], dumpFilePath, moreDumpFilePaths);
     Promise.map(dumpFilePaths, (filePath) => importFileData(filePath, concurrency, retries))
