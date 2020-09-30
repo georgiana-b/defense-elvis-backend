@@ -185,6 +185,64 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /tenders/count:
+    x-swagger-router-controller: tenders
+    get:
+      tags:
+        - count
+      description: Returns a count of all the tenders that follow a certain query
+      operationId: countTenders
+      parameters:
+        - name: years
+          in: query
+          description: Get only the count of tenders from certain years - array of years
+          required: false
+          type: array
+          items:
+            type: integer
+        - name: cpvs
+          in: query
+          description: Get only the count of tenders that have these CPVs - array of CPV codes
+          required: false
+          type: array
+          items:
+            type: string
+        - name: countries
+          in: query
+          description: Get only the count of tenders from certain countries - array of ISO 3166-1 alpha-2 country codes
+          required: false
+          type: array
+          items:
+            type: string
+        - name: buyers
+          in: query
+          description: Get only the count of tenders awarded by certain buyers - array of buyer IDs
+          required: false
+          type: array
+          items:
+            type: string
+            format: uuid
+        - name: bidders
+          in: query
+          description: Get only the count of tenders awarded to certain bidders - array of bidder IDs
+          required: false
+          type: array
+          items:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/TenderCountResponse"
+        "400":
+          description: Bad request [Request validation failed (wrong param type)]
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /tenders/actors:
     x-swagger-router-controller: actors
     get:
@@ -1901,6 +1959,12 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/Actor"
+  TenderCountResponse:
+    type: object
+    properties:
+      count:
+        type: integer
+        description: Number of tenders that have the given year, country, actors and cpv codes
   Actor:
     type: object
     required:
