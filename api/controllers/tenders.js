@@ -10,10 +10,8 @@ const codes = require('../helpers/codes');
 const formatError = require('../helpers/errorFormatter');
 
 function countTenders(req, res) {
-  const swaggerParams = _.pickBy(
-    _.mapValues(req.swagger.params, 'value'),
-    (val) => !(_.isUndefined(val)),
-  );
+  const swaggerParams = req.swagger.params.body.value;
+  console.log(swaggerParams)
   const queryCriteria = [];
   const queryParams = {};
   if (swaggerParams.years) {

@@ -193,43 +193,12 @@ paths:
       description: Returns a count of all the tenders that follow a certain query
       operationId: countTenders
       parameters:
-        - name: years
-          in: query
-          description: Get only the count of tenders from certain years - array of years
-          required: false
-          type: array
-          items:
-            type: integer
-        - name: cpvs
-          in: query
-          description: Get only the count of tenders that have these CPVs - array of CPV codes
-          required: false
-          type: array
-          items:
-            type: string
-        - name: countries
-          in: query
-          description: Get only the count of tenders from certain countries - array of ISO 3166-1 alpha-2 country codes
-          required: false
-          type: array
-          items:
-            type: string
-        - name: buyers
-          in: query
-          description: Get only the count of tenders awarded by certain buyers - array of buyer IDs
-          required: false
-          type: array
-          items:
-            type: string
-            format: uuid
-        - name: bidders
-          in: query
-          description: Get only the count of tenders awarded to certain bidders - array of bidder IDs
-          required: false
-          type: array
-          items:
-            type: string
-            format: uuid
+        - name: body
+          in: body
+          description: Query options to filters tenders by
+          required: true
+          schema:
+            $ref: "#/definitions/NetworkQuery"  
       responses:
         "200":
           description: Success
