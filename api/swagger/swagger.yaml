@@ -187,7 +187,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /tenders/count:
     x-swagger-router-controller: tenders
-    get:
+    post:
       tags:
         - count
       description: Returns a count of all the tenders that follow a certain query
