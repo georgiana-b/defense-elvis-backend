@@ -7,8 +7,7 @@ const priceExtractor = require('./price');
 function extractLot(tenderAttrs) {
   return {
     id: uuidv4(),
-    title: tenderAttrs.title,
-    bidsCount: 1,
+    title: tenderAttrs.title
   };
 }
 
